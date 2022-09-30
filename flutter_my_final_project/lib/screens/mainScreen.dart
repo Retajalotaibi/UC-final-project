@@ -1,27 +1,24 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_my_final_project/helpers/helper.dart';
+import 'package:flutter_my_final_project/main.dart';
 import 'package:flutter_my_final_project/model/medModel.dart';
 import 'package:flutter_my_final_project/screens/addingScreen.dart';
 import 'package:flutter_my_final_project/theme.dart';
 import 'package:flutter_my_final_project/widgets/medButton.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MainScreen extends StatefulWidget {
-  final todaysMed;
-  final update;
-  const MainScreen({super.key, required this.todaysMed, required this.update});
+class MainScreen extends ConsumerWidget {
+  MainScreen({super.key});
 
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  DateTime selectedDate = DateTime.now();
   var isActive = false;
-
   void onAdd() {}
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List meds = ref.watch(medProvider);
+    final DateTime date = ref.watch(dateProvider);
+    final List todaysMed = getTodaysMed("$date", meds);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -40,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        AddingScreen(selectedDate: selectedDate, onAdd: onAdd)),
+                        AddingScreen(selectedDate: date, onAdd: onAdd)),
               );
             },
             icon: Icon(Icons.add, color: Colors.black, size: 35),
@@ -72,10 +69,8 @@ class _MainScreenState extends State<MainScreen> {
                   selectedTextColor: Colors.white,
                   dateTextStyle: TextStyle(fontSize: 20),
                   onDateChange: (date) {
-                    selectedDate = date;
-                    widget.update("$selectedDate");
+                    ref.read(dateProvider.notifier).state = date;
 
-                    print(widget.todaysMed.length);
                     // print(selectedDate);
                   },
                 ),
@@ -100,28 +95,17 @@ class _MainScreenState extends State<MainScreen> {
                     child: ListView.builder(
                       itemBuilder: (context, index) {
                         return MedButton(
-                            name: widget.todaysMed[index].name,
-                            time: widget.todaysMed[index].name,
-                            isActive: widget.todaysMed[index].isTaken,
+                            name: todaysMed[index].name,
+                            time: todaysMed[index].name,
+                            isActive: todaysMed[index].isTaken,
                             onChange: () {
-                              print("tday len ${widget.todaysMed.length}");
-                              widget.todaysMed[index].isTaken =
-                                  !widget.todaysMed[index].isTaken;
-                              setState(() {});
+                              todaysMed[index].isTaken =
+                                  !todaysMed[index].isTaken;
                             });
                       },
-                      itemCount: widget.todaysMed.length,
+                      itemCount: todaysMed.length,
                     ),
                   ),
-                  // MedButton(
-                  //     name: "advil",
-                  //     time: "8:30 daily",
-                  //     isActive: isActive,
-                  //     onChange: () {
-                  //       getTodaysMed("$selectedDate", meds);
-                  //       isActive = !isActive;
-                  //       setState(() {});
-                  //     }),
                 ],
               ),
             )

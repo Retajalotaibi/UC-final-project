@@ -31,11 +31,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  riverpod: ^2.0.0-dev.5
+  hooks_riverpod: ^2.0.0-dev.0
   syncfusion_flutter_calendar: ^20.2.43
   flutter_clean_calendar: ^1.0.2
   intl:
   date_picker_timeline:
-  riverpod: ^2.0.0-dev.9
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2

@@ -8,8 +8,9 @@ import 'package:flutter_my_final_project/widgets/loadingWidget.dart';
 
 import 'package:flutter_my_final_project/widgets/medInfo.dart';
 import 'package:flutter_my_final_project/widgets/textfieldWidget.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class AddingScreen extends StatefulWidget {
+class AddingScreen extends ConsumerStatefulWidget {
   final selectedDate;
   final onAdd;
   const AddingScreen(
